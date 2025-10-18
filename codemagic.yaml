@@ -1,12 +1,26 @@
 workflows:
-  ios-release-no-shorebird:
+  ios-release:
     name: iOS Release
     environment:
       flutter: stable
       xcode: latest
     scripts:
-      - flutter clean
+      # Asegura dependencias actualizadas
       - flutter pub get
-      - flutter build ipa --release --no-codesign
+
+      # Limpia builds previas
+      - flutter clean
+
+      # Construye el IPA sin firma (útil si no tienes cuenta Apple)
+      - flutter build ipa --no-codesign
+
+      # Verifica qué se generó
+      - ls -R build/ios/ipa
+
+      # Renombra el ipa con el nombre del proyecto y versión
+      - |
+        APP_NAME="exploraya"
+        VERSION=$(grep 'version:' pubspec.yaml | awk '{print $2}')
+        mv build/ios/ipa/*.ipa build/ios/ipa/${APP_NAME}_${VERSION}.ipa
     artifacts:
-      - build/ios/ipa/Runner.ipa
+      - build/ios/ipa/*.ipa
