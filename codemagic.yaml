@@ -1,17 +1,12 @@
 workflows:
-  ios-release:
+  ios-release-no-shorebird:
     name: iOS Release
     environment:
       flutter: stable
       xcode: latest
     scripts:
-      - name: Build iOS IPA
-        script: |
-          flutter clean
-          flutter pub get
-          flutter build ipa --release --no-codesign
-          mkdir -p build/ios/ipa
-          cd build/ios/ipa
-          zip -r Runner.ipa.zip *.ipa
+      - flutter clean
+      - flutter pub get
+      - flutter build ipa --release --no-codesign
     artifacts:
-      - build/ios/ipa/Runner.ipa.zip
+      - build/ios/ipa/Runner.ipa
